@@ -26,6 +26,7 @@ the payload.
 2. Go to the project's root folder
 
    ```bash
+   sudo apt-get install tesseract-ocr
    cd resumeio-to-pdf
    ```
 

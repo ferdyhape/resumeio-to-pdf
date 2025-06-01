@@ -1,196 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Resume.io to PDF</title>
+    <link
+      rel="stylesheet"
+      href="./static/assets/vendor/tailwind/tailwind.min.css"
+    />
+  </head>
 
-    <style>
-        body {
-            font-family: "Inter", sans-serif;
-        }
+  <body class="bg-gray-100 flex items-center justify-center h-screen py-96">
+    <div class="w-full max-w-lg mx-auto px-3 sm:px-0">
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <div class="text-center mb-6">
+          <h1 class="text-2xl font-semibold">Resume.io Downloader</h1>
+        </div>
+        <div class="mb-6 p-4 bg-blue-50 rounded-lg">
+          <h2 class="text-sm sm:text-lg font-semibold text-blue-700 mb-1">
+            Harap Dibaca !!!
+          </h2>
+          <p class="text-gray-700 text-sm sm:text-base">
+            Silakan kunjungi
+            <a
+              href="https://resume.io/pricing"
+              class="underline text-blue-500 hover:text-blue-700"
+              target="_blank"
+              >halaman harga</a
+            >
+            di Resume.io yang memberikan harga yang adil dan terjangkau untuk
+            layanan download PDF dan beli layanan tersebut.
+            <span class="font-semibold"
+              >Karena cara tersebut lebih baik daripada menggunakan website
+              ini.</span
+            >
+          </p>
+          <h2 class="text-sm sm:text-lg mt-2 font-semibold text-blue-700 mb-1">
+            Cara Penggunaan
+          </h2>
+          <ul
+            class="list-decimal list-inside text-gray-700 space-y-1 text-sm sm:text-base"
+          >
+            <li>
+              Pastikan Anda sudah login dan membuat resume di
+              <a
+                href="https://resume.io/app/resumes"
+                target="_blank"
+                class="underline text-blue-500 hover:text-blue-700"
+                >Resume.io</a
+              >.
+            </li>
+            <li>
+              Dapatkan <span class="font-semibold">rendering_token</span> dari
+              <a
+                href="https://resume.io/api/app/resumes"
+                target="_blank"
+                class="underline text-blue-500 hover:text-blue-700"
+                >API Resume.io</a
+              >.
+              <img
+                src="./static/assets/images/rendering_token.png"
+                alt="Rendering Token"
+                class="w-3/4 mx-auto"
+              />
+            </li>
+            <li>Tempel token ke kolom input di bawah.</li>
+            <li>Klik tombol Download PDF.</li>
+          </ul>
+        </div>
+        <!-- Form -->
+        <form method="post" class="flex flex-col gap-4" id="downloadForm">
+          <!-- Input field -->
+          <div>
+            <input
+              type="text"
+              name="rendering_token"
+              placeholder="Enter your resume `renderingToken`"
+              class="w-full px-4 py-2 text-sm border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none border-gray-300"
+              maxlength="24"
+              aria-label="Id"
+              required
+            />
+            <span class="text-red-500 text-sm mt-1 hidden"
+              >Your resume `renderingToken` must be a 24-character alphanumeric
+              string</span
+            >
+          </div>
 
-        .container {
-            position: relative;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 3rem;
-        }
-
-        .links {
-            position: absolute;
-            top: 0;
-            right: 0;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .title {
-            font-size: 3rem;
-        }
-
-        .resume_form {
-            display: flex;
-            align-items: center;
-            flex-direction: column;
-            min-width: 30rem;
-            gap: 2rem;
-        }
-
-        .resume {
-            width: 100%;
-            padding: 1rem;
-            border-radius: 4px;
-            border: 1px solid #666666;
-            font-family: "Inter", sans-serif;
-            font-size: 1rem;
-        }
-
-        .btn {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 4px;
-            border: none;
-            font-size: 1rem;
-            font-family: "Inter", sans-serif;
-            background-color: #1c1c1c;
-            color: #ffffff;
-            cursor: pointer;
-            width: 12rem;
-            height: 3.5rem;
-        }
-
-        #loader {
-            display: none;
-        }
-
-        .error {
-            margin-right: auto;
-            display: none;
-            color: red;
-            font-size: 0.8rem;
-        }
-
-        .error-border {
-            border: 1px solid red;
-        }
-
-        .spinner_V8m1 {
-            transform-origin: center;
-            animation: spinner_zKoa 2s linear infinite
-        }
-
-        .spinner_V8m1 circle {
-            stroke-linecap: round;
-            animation: spinner_YpZS 1.5s ease-in-out infinite
-        }
-
-        @keyframes spinner_zKoa {
-            100% {
-                transform: rotate(360deg)
-            }
-        }
-
-        @keyframes spinner_YpZS {
-            0% {
-                stroke-dasharray: 0 150;
-                stroke-dashoffset: 0
-            }
-            47.5% {
-                stroke-dasharray: 42 150;
-                stroke-dashoffset: -16
-            }
-            95%, 100% {
-                stroke-dasharray: 42 150;
-                stroke-dashoffset: -59
-            }
-        }
-
-        @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            70% { transform: translate(3px, 1px) rotate(-1deg); }
-            80% { transform: translate(-1px, -1px) rotate(1deg); }
-            90% { transform: translate(1px, 2px) rotate(0deg); }
-            100% { transform: translate(1px, -2px) rotate(-1deg); }
-        }
-
-        .shake {
-            animation: shake 0.1s;
-            animation-iteration-count: 1;
-        }
-
-    </style>
-</head>
-<body>
-<div class="container">
-    <div class="links">
-        <iframe  src="https://ghbtns.com/github-btn.html?user=felipeall&repo=resumeio-to-pdf&type=star&count=true&size=large" frameborder="0" scrolling="0" width="130" height="30" title="GitHub"></iframe>
-        <a href="https://www.buymeacoffee.com/felipeall" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 40px !important;width: 160px !important;" ></a>
-    </div>
-    <h1 class="title">Resume.io to PDF</h1>
-    <form method="post" class="resume_form" id="downloadForm">
-        <input type="text" class="resume" name="rendering_token" placeholder="Enter your resume `renderingToken'" aria-label="Id" maxlength="24">
-        <span class="error">Your resume `renderingToken` must be a 24-character alphanumeric string</span>
-        <button id="submit-btn" class="btn" type="submit"><span id="submit-text">Download</span>
-            <svg id="loader" width="23" height="23" stroke="#fff" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <g class="spinner_V8m1">
-                    <circle cx="12" cy="12" r="9.5" fill="none" stroke-width="3"></circle>
-                </g>
+          <!-- Submit button -->
+          <button
+            id="submit-btn"
+            type="submit"
+            class="flex items-center justify-center gap-2 w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          >
+            <span id="submit-text">Download</span>
+            <svg
+              id="loader"
+              class="w-5 h-5 animate-spin hidden"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v8z"
+              ></path>
             </svg>
-        </button>
-    </form>
-</div>
+          </button>
+        </form>
+      </div>
+      <div class="flex justify-between items-center space-x-4 pt-5 mx-5">
+        <p class="text-md text-gray-700">Developed by ferdyhape</p>
+        <div class="flex space-x-1">
+          <a href="https://github.com/ferdyhape" target="_blank"
+            ><img src="./static/assets/icon/github.svg" alt="GitHub"
+          /></a>
+          <a href="https://www.linkedin.com/in/ferdyhape/" target="_blank"
+            ><img src="./static/assets/icon/linkedin.svg" alt="LinkedIn"
+          /></a>
+          <a href="https://www.instagram.com/ferdyhape/" target="_blank"
+            ><img src="./static/assets/icon/instagram.svg" alt="Instagram"
+          /></a>
+        </div>
+      </div>
+    </div>
+    <script src="./static/assets/vendor/jquery/jquery.min.js"></script>
+    <script>
+      // Form elements
+      const downloadForm = document.getElementById("downloadForm");
+      const errorMessage = downloadForm.querySelector("span");
+      const inputField = downloadForm.querySelector("input");
+      const submitText = document.getElementById("submit-text");
+      const loader = document.getElementById("loader");
 
-
-<script>
-    window.addEventListener('pageshow', function() {
-        document.getElementById('loader').style.display = 'none';
-        document.getElementById('submit-text').style.display = 'block';
-    });
-
-    const downloadForm = document.getElementById("downloadForm");
-    const errorMessage = document.querySelector('.error');
-    const inputField = document.querySelector('.resume');
-
-    downloadForm.addEventListener("submit", function (e) {
+      // Form validation and submission
+      downloadForm.addEventListener("submit", function (e) {
         e.preventDefault();
-        const rendering_token = new FormData(downloadForm).get('rendering_token').toString();
-        const regex = /^[a-zA-Z0-9]{24}$/;
+        const renderingToken = inputField.value.trim();
+        const isValid = /^[a-zA-Z0-9]{24}$/.test(renderingToken);
 
-        if (!regex.test(rendering_token)) {
-            errorMessage.style.display = 'block';
-            inputField.classList.add('error-border');
-            inputField.classList.remove('shake');
+        if (!isValid) {
+          errorMessage.classList.remove("hidden");
+          inputField.classList.add("border-red-500");
+          inputField.classList.remove("shake");
 
-            setTimeout(function() {
-                inputField.classList.add('shake');
-            }, 100);
+          setTimeout(() => {
+            inputField.classList.add("shake");
+          }, 100);
 
-            return;
+          return;
         } else {
-            errorMessage.style.display = 'none';
-            inputField.classList.remove('error-border', 'shake');
+          errorMessage.classList.add("hidden");
+          inputField.classList.remove("border-red-500", "shake");
         }
 
-        downloadForm.action = '/download/' + rendering_token;
-        document.getElementById('submit-text').style.display = 'none';
-        document.getElementById('loader').style.display = 'block';
+        // Update form action
+        downloadForm.action = `/download/${renderingToken}`;
+
+        // Show loader
+        submitText.classList.add("hidden");
+        loader.classList.remove("hidden");
+
+        // Submit form
         this.submit();
-    });
-</script>
-</body>
+      });
+
+      // Reset loader on page show
+      window.addEventListener("pageshow", function () {
+        loader.classList.add("hidden");
+        submitText.classList.remove("hidden");
+      });
+    </script>
+  </body>
 </html>
